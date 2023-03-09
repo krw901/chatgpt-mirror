@@ -4,6 +4,14 @@ import fetch from 'isomorphic-unfetch';
 import ProxyAgent from 'proxy-agent-v2';
 import { Observable } from 'rxjs';
 
+function getApiKey(key: string): string {
+  if (key.includes(';')) {
+    const keys = key.split(';');
+    return keys[Math.floor(Math.random() * keys.length)];
+  }
+  return key;
+}
+
 @Injectable()
 export class ChatGPTService implements OnModuleInit {
   private readonly logger = new Logger(ChatGPTService.name);
@@ -18,7 +26,7 @@ export class ChatGPTService implements OnModuleInit {
     }
 
     this.api = new ChatGPTAPI({
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: getApiKey(process.env.OPENAI_API_KEY),
       fetch: this.proxyFetch,
     });
   }
